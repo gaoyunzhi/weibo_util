@@ -92,6 +92,8 @@ def getWid(card):
 def getSinceId(result_dict):
 	wids = [getWid(item) for item in result_dict.values()]
 	wids = [wid for wid in wids if wid]
+	if not wids:
+		return 0
 	return min(wids)
 
 def backfill(key, force_cache=False, sleep=10):
@@ -100,11 +102,13 @@ def backfill(key, force_cache=False, sleep=10):
 	result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
 	final_result = result_dict
 	while result_dict:
-		url = base_url + '&since_id=%d' % getSinceId(result_dict)
+		since_id = getSinceId(result_dict)
+		if since_id == 0:
+			break
+		url = base_url + '&since_id=%d' % (since_id - 1)
 		content = cached_url.get(url, force_cache = force_cache, sleep = sleep)
 		result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
 		final_result.update(result_dict)
-		print(len(final_result), getSinceId(result_dict))
 	return sortedResult(final_result)
 
 def getPotentialUser(key, card):

@@ -15,7 +15,7 @@ def testSearchUser(key):
 	time.sleep(10)
 
 def backfill(key):
-	weiboo.backfill(key)
+	print(len(weiboo.backfill(key)))
 
 if __name__=='__main__':
 	backfill('7020024436')
