@@ -83,6 +83,30 @@ def search(key, force_cache=False, sleep=0):
 	result = getResultDict(content)
 	return sortedResult(result, key)
 
+def getWid(card):
+	try:
+		return int(card.get('mblog', {}).get('id', 0))
+	except:
+		return 0
+
+def getSinceId(result_dict):
+	wids = [getWid(item) for item in result_dict.values()]
+	wids = [wid for wid in wids if wid]
+	return min(wids)
+
+def backfill(key, force_cache=False, sleep=10):
+	base_url = getSearchUrl(key)
+	content = cached_url.get(base_url, force_cache = force_cache, sleep = sleep)
+	result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
+	final_result = result_dict
+	while result_dict:
+		url = base_url + '&since_id=%d' % getSinceId(result_dict)
+		content = cached_url.get(url, force_cache = force_cache, sleep = sleep)
+		result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
+		final_result.update(result_dict)
+		print(len(final_result), getSinceId(result_dict))
+	return sortedResult(final_result)
+
 def getPotentialUser(key, card):
 	screenname = card.get('user', {}).get('screen_name')
 	uid = str(card.get('user', {}).get('id'))

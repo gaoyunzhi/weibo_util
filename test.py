@@ -14,8 +14,11 @@ def testSearchUser(key):
 	print(weiboo.searchUser(key))
 	time.sleep(10)
 
+def backfill(key):
+	weiboo.backfill(key)
+
 if __name__=='__main__':
-	testSearch('女权')
-	testSearch('6520732164')
-	testSearchUser('澎湃新闻')
-	testSearchUser('5044281310')
+	backfill('7020024436')
+	# testSearch('6520732164')
+	# testSearchUser('澎湃新闻')
+	# testSearchUser('5044281310')
