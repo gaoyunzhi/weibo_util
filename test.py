@@ -5,8 +5,8 @@ import weiboo
 import time
 
 def testSearch(key):
-	for url, card in weiboo.search(key):
-		print(url, weiboo.getCount(card))
+	# for url, card in weiboo.search(key):
+	# 	print(url, weiboo.getCount(card))
 	with open('tmp.txt', 'w') as f:
 		f.write(str(weiboo.search(key)))
 
@@ -18,7 +18,7 @@ def backfill(key):
 	print(len(weiboo.backfill(key)))
 
 if __name__=='__main__':
-	backfill('7020024436')
-	# testSearch('6520732164')
+	# backfill('7020024436')
+	testSearch('6622333936')
 	# testSearchUser('澎湃新闻')
 	# testSearchUser('5044281310')
