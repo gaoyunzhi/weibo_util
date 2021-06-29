@@ -15,10 +15,10 @@ def testSearchUser(key):
 	time.sleep(10)
 
 def backfill(key):
-	print(len(weiboo.backfill(key)))
+	print(len(weiboo.backfill(key, limit = 4)))
 
 if __name__=='__main__':
-	# backfill('7020024436')
-	testSearch('6622333936')
+	backfill('5402666134')
+	# testSearch('6622333936')
 	# testSearchUser('澎湃新闻')
 	# testSearchUser('5044281310')

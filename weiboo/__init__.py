@@ -83,30 +83,14 @@ def search(key, force_cache=False, sleep=0):
 	result = getResultDict(content)
 	return sortedResult(result, key)
 
-def getWid(card):
-	try:
-		return int(card.get('mblog', {}).get('id', 0))
-	except:
-		return 0
-
-def getSinceId(result_dict):
-	wids = [getWid(item) for item in result_dict.values()]
-	wids = [wid for wid in wids if wid]
-	if not wids:
-		return 0
-	return min(wids)
-
 def backfill(key, force_cache=False, sleep=10, limit=30):
 	base_url = getSearchUrl(key)
 	content = cached_url.get(base_url, force_cache = force_cache, sleep = sleep)
 	result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
 	final_result = result_dict
-	count = 0
+	count = 2
 	while result_dict:
-		since_id = getSinceId(result_dict)
-		if since_id == 0:
-			break
-		url = base_url + '&since_id=%d' % (since_id - 1)
+		url = base_url + '&page=%d' % count
 		content = cached_url.get(url, force_cache = force_cache, sleep = sleep)
 		result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
 		final_result.update(result_dict)
