@@ -111,7 +111,7 @@ def yieldUser(key, content):
 			yield getPotentialUser(key, sub_card) 
 
 def searchUser(key, sleep=0):
-	content = getContent(key, force_cache=True, sleep=sleep)
+	content = getContent(key, ttl=float('inf'), sleep=sleep)
 	for result in yieldUser(key, content):
 		if result:
 			return result
