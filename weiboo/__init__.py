@@ -71,27 +71,26 @@ def getResultDict(content):
 				result[url] = card
 	return result
 
-def getContent(key, force_cache=False, sleep=0): 
+def getContent(key, ttl=0, sleep=0): 
 	url = getSearchUrl(key)
-	content = cached_url.get(url, force_cache=force_cache, 
-		sleep = sleep)
+	content = cached_url.get(url, ttl=ttl, sleep = sleep)
 	return yaml.load(content, Loader=yaml.FullLoader)
 
 # result is approximately sorted by like
-def search(key, force_cache=False, sleep=0): 
-	content = getContent(key, force_cache, sleep)
+def search(key, ttl=0, sleep=0): 
+	content = getContent(key, ttl, sleep)
 	result = getResultDict(content)
 	return sortedResult(result, key)
 
-def backfill(key, force_cache=False, sleep=10, limit=30):
+def backfill(key, ttl=0, sleep=10, limit=30):
 	base_url = getSearchUrl(key)
-	content = cached_url.get(base_url, force_cache = force_cache, sleep = sleep)
+	content = cached_url.get(base_url, ttl = ttl, sleep = sleep)
 	result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
 	final_result = result_dict
 	count = 2
 	while result_dict:
 		url = base_url + '&page=%d' % count
-		content = cached_url.get(url, force_cache = force_cache, sleep = sleep)
+		content = cached_url.get(url, ttl = ttl, sleep = sleep)
 		result_dict = getResultDict(yaml.load(content, Loader=yaml.FullLoader))
 		final_result.update(result_dict)
 		count += 1
